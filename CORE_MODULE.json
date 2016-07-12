@@ -1,0 +1,14 @@
+{
+  "name": "proximity",
+  "description": "Proximity module",
+  "chip": "STM32F303CB",
+  "required_packages": [
+    "led"
+  ],
+  "chibios_components": [
+    "rt",
+    "hal",
+    "pal",
+    "syscalls"
+  ]
+}
