@@ -1,11 +1,11 @@
-#include <Configuration.hpp>
+#include <ModuleConfiguration.hpp>
 #include <Module.hpp>
 
 // MESSAGES
-#include <common_msgs/Led.hpp>
+#include <core/common_msgs/Led.hpp>
 
 // NODES
-#include <led/Subscriber.hpp>
+#include <core/led/Subscriber.hpp>
 
 // BOARD IMPL
 
@@ -15,32 +15,37 @@ Module module;
 // TYPES
 
 // NODES
-led::Subscriber led_subscriber("led_subscriber", Core::MW::Thread::PriorityEnum::LOWEST);
+core::led::Subscriber led_subscriber("led_subscriber", core::os::Thread::PriorityEnum::LOWEST);
 
 // MAIN
 extern "C" {
-	int
-	main()
-	{
-		module.initialize();
+   int
+   main()
+   {
+      module.initialize();
 
-		// Led subscriber node
-		led_subscriber.configuration.topic = "led";
-		module.add(led_subscriber);
+      module.add(led_subscriber);
 
-		// Setup and run
-		module.setup();
-		module.run();
+      // Led subscriber node
+      core::led::SubscriberConfiguration led_subscriber_configuration;
+      led_subscriber_configuration.topic = "led";
+      led_subscriber.setConfiguration(led_subscriber_configuration);
 
-		// Is everything going well?
-		for (;;) {
-			if (!module.isOk()) {
-				module.halt("This must not happen!");
-			}
+      // Setup and run
+      module.setup();
+      module.run();
 
-			Core::MW::Thread::sleep(Core::MW::Time::ms(500));
-		}
+      // Is everything going well?
+      for (;;) {
+         if (!module.isOk()) {
+            module.halt("This must not happen!");
+         }
 
-		return Core::MW::Thread::OK;
-	}
+         module.keepAlive();
+
+         core::os::Thread::sleep(core::os::Time::ms(500));
+      }
+
+      return core::os::Thread::OK;
+   } // main
 }
