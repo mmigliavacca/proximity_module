@@ -9,6 +9,8 @@
   "chibios_components": [
     "rt",
     "hal",
+    "ext",
+    "icu",
     "pal",
     "syscalls"
   ]

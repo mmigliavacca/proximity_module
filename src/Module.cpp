@@ -14,8 +14,64 @@
 #include <Module.hpp>
 
 
-using LED_PAD = core::hw::Pad_<core::hw::GPIO_F, GPIOF_LED>;
+using LED_PAD = core::hw::Pad_<core::hw::GPIO_F, 1>;
 static LED_PAD _led;
+
+static core::hw::Pad_<core::hw::GPIO_A, 11> _d1;
+static core::hw::Pad_<core::hw::GPIO_A, 10> _d2;
+static core::hw::Pad_<core::hw::GPIO_A, 8> _d3;
+static core::hw::Pad_<core::hw::GPIO_A, 9> _d4;
+static core::hw::Pad_<core::hw::GPIO_B, 7> _d5;
+static core::hw::Pad_<core::hw::GPIO_B, 6> _d6;
+static core::hw::Pad_<core::hw::GPIO_B, 4> _d7;
+static core::hw::Pad_<core::hw::GPIO_B, 5> _d8;
+
+core::hw::Pad& Module::d1 = _d1;
+core::hw::Pad& Module::d2 = _d2;
+core::hw::Pad& Module::d3 = _d3;
+core::hw::Pad& Module::d4 = _d4;
+core::hw::Pad& Module::d5 = _d5;
+core::hw::Pad& Module::d6 = _d6;
+core::hw::Pad& Module::d7 = _d7;
+core::hw::Pad& Module::d8 = _d8;
+
+static core::hw::Pad_<core::hw::GPIO_A, 7> _a1;
+static core::hw::Pad_<core::hw::GPIO_A, 6> _a2;
+static core::hw::Pad_<core::hw::GPIO_A, 5> _a3;
+static core::hw::Pad_<core::hw::GPIO_A, 4> _a4;
+static core::hw::Pad_<core::hw::GPIO_A, 0> _a5;
+static core::hw::Pad_<core::hw::GPIO_A, 1> _a6;
+static core::hw::Pad_<core::hw::GPIO_A, 3> _a7;
+static core::hw::Pad_<core::hw::GPIO_A, 2> _a8;
+
+core::hw::Pad& Module::a1 = _a1;
+core::hw::Pad& Module::a2 = _a2;
+core::hw::Pad& Module::a3 = _a3;
+core::hw::Pad& Module::a4 = _a4;
+core::hw::Pad& Module::a5 = _a5;
+core::hw::Pad& Module::a6 = _a6;
+core::hw::Pad& Module::a7 = _a7;
+core::hw::Pad& Module::a8 = _a8;
+
+static EXTConfig ext_cfg = {
+	{
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL},
+		{EXT_CH_MODE_DISABLED, NULL}
+	}
+};
 
 static THD_WORKING_AREA(wa_info, 1024);
 static core::mw::RTCANTransport rtcantra(RTCAND1);
@@ -43,6 +99,8 @@ Module::initialize()
    if (!initialized) {
       halInit();
       chSysInit();
+
+      extStart(&EXTD1, &ext_cfg);
 
       core::mw::Middleware::instance.initialize(wa_info, sizeof(wa_info), core::os::Thread::LOWEST);
       rtcantra.initialize(rtcan_config);
