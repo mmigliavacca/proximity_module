@@ -19,12 +19,12 @@ static LED_PAD _led;
 
 static core::hw::Pad_<core::hw::GPIO_A, 11> _d1;
 static core::hw::Pad_<core::hw::GPIO_A, 10> _d2;
-static core::hw::Pad_<core::hw::GPIO_A, 8> _d3;
-static core::hw::Pad_<core::hw::GPIO_A, 9> _d4;
-static core::hw::Pad_<core::hw::GPIO_B, 7> _d5;
-static core::hw::Pad_<core::hw::GPIO_B, 6> _d6;
-static core::hw::Pad_<core::hw::GPIO_B, 4> _d7;
-static core::hw::Pad_<core::hw::GPIO_B, 5> _d8;
+static core::hw::Pad_<core::hw::GPIO_A, 8>  _d3;
+static core::hw::Pad_<core::hw::GPIO_A, 9>  _d4;
+static core::hw::Pad_<core::hw::GPIO_B, 7>  _d5;
+static core::hw::Pad_<core::hw::GPIO_B, 6>  _d6;
+static core::hw::Pad_<core::hw::GPIO_B, 4>  _d7;
+static core::hw::Pad_<core::hw::GPIO_B, 5>  _d8;
 
 core::hw::Pad& Module::d1 = _d1;
 core::hw::Pad& Module::d2 = _d2;
@@ -54,23 +54,23 @@ core::hw::Pad& Module::a7 = _a7;
 core::hw::Pad& Module::a8 = _a8;
 
 static EXTConfig ext_cfg = {
-	{
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL},
-		{EXT_CH_MODE_DISABLED, NULL}
-	}
+   {
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL},
+      {EXT_CH_MODE_DISABLED, NULL}
+   }
 };
 
 static THD_WORKING_AREA(wa_info, 1024);
