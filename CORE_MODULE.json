@@ -12,6 +12,7 @@
     "ext",
     "icu",
     "pal",
+    "adc",
     "syscalls"
   ]
 }
