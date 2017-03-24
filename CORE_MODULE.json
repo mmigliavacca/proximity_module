@@ -1,7 +1,7 @@
 {
   "name": "proximity",
   "description": "Proximity module",
-  "chip": "STM32F303CB",
+  "chip": "STM32F303CC",
   "required_packages": [
     "led",
     "common_msgs"
