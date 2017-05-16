@@ -11,6 +11,7 @@
 #include "hal.h"
 
 #include <core/hw/GPIO.hpp>
+#include <core/hw/IWDG.hpp>
 #include <core/os/Thread.hpp>
 #include <Module.hpp>
 
@@ -55,37 +56,43 @@ core::hw::Pad& Module::a7 = _a7;
 core::hw::Pad& Module::a8 = _a8;
 
 static EXTConfig ext_cfg = {
-   {
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL},
-      {EXT_CH_MODE_DISABLED, NULL}
-   }
+    {
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL},
+        {EXT_CH_MODE_DISABLED, NULL}
+    }
 };
 
 static core::os::Thread::Stack<1024> management_thread_stack;
 static core::mw::RTCANTransport      rtcantra(&RTCAND1);
 
 RTCANConfig rtcan_config = {
-   1000000, 100, 60
+    1000000, 100, 60
 };
 
-#ifndef CORE_MODULE_NAME
-#define CORE_MODULE_NAME "proximity"
-#endif
+// ----------------------------------------------------------------------------
+// CoreModule STM32FlashConfigurationStorage
+// ----------------------------------------------------------------------------
+#include <core/snippets/CoreModuleSTM32FlashConfigurationStorage.hpp>
+// ----------------------------------------------------------------------------
 
-core::mw::Middleware core::mw::Middleware::instance(CORE_MODULE_NAME, "BOOT_" CORE_MODULE_NAME);
+core::mw::Middleware
+core::mw::Middleware::instance(
+    ModuleConfiguration::MODULE_NAME
+);
+
 
 Module::Module()
 {}
@@ -93,61 +100,26 @@ Module::Module()
 bool
 Module::initialize()
 {
-//	CORE_ASSERT(core::mw::Middleware::instance.is_stopped()); // TODO: capire perche non va...
+    static bool initialized = false;
 
-   static bool initialized = false;
+    if (!initialized) {
+        halInit();
+        chSysInit();
 
-   if (!initialized) {
-      halInit();
-      chSysInit();
+        extStart(&EXTD1, &ext_cfg);
 
-      extStart(&EXTD1, &ext_cfg);
+        core::mw::Middleware::instance.initialize(name(), management_thread_stack, management_thread_stack.size(), core::os::Thread::LOWEST);
+        rtcantra.initialize(rtcan_config, canID());
+        core::mw::Middleware::instance.start();
 
-      core::mw::Middleware::instance.initialize(management_thread_stack, management_thread_stack.size(), core::os::Thread::LOWEST);
-      rtcantra.initialize(rtcan_config);
-      core::mw::Middleware::instance.start();
+        initialized = true;
+    }
 
-      initialized = true;
-   }
-
-   return initialized;
+    return initialized;
 } // Board::initialize
 
 // ----------------------------------------------------------------------------
 // CoreModule HW specific implementation
 // ----------------------------------------------------------------------------
-
-void
-core::mw::CoreModule::Led::toggle()
-{
-    _led.toggle();
-}
-
-void
-core::mw::CoreModule::Led::write(
-    unsigned on
-)
-{
-    _led.write(on);
-}
-
-void
-core::mw::CoreModule::reset()
-{
-}
-
-void
-core::mw::CoreModule::keepAlive()
-{
-}
-
-void
-core::mw::CoreModule::disableBootloader()
-{
-}
-
-void
-core::mw::CoreModule::enableBootloader()
-{
-}
-
+#include <core/snippets/CoreModuleHWSpecificImplementation.hpp>
+// ----------------------------------------------------------------------------
