@@ -1,51 +1,72 @@
+/* Proximity Module template file
+ *
+ */
+
 #include <ModuleConfiguration.hpp>
 #include <Module.hpp>
 
-// MESSAGES
-#include <core/common_msgs/Led.hpp>
+// --- BOARD IMPL -------------------------------------------------------------
+#include <core/hw/GPIO.hpp>
+#include <core/hw/EXT.hpp>
 
-// NODES
-#include <core/led/Subscriber.hpp>
-
-// BOARD IMPL
-
-// *** DO NOT MOVE ***
+// --- MODULE -----------------------------------------------------------------
 Module module;
 
-// TYPES
+// *** DO NOT MOVE THE CODE ABOVE THIS COMMENT *** //
 
-// NODES
-core::led::Subscriber led_subscriber("led_subscriber", core::os::Thread::PriorityEnum::LOWEST);
+// --- MESSAGES ---------------------------------------------------------------
+#include <core/common_msgs/Led.hpp>
 
-// MAIN
+// --- NODES ------------------------------------------------------------------
+#include <core/led/Subscriber.hpp>
+
+// --- TYPES ------------------------------------------------------------------
+
+// --- CONFIGURATIONS ---------------------------------------------------------
+core::led::SubscriberConfiguration led_subscriber_configuration_default;
+
+// --- NODES ------------------------------------------------------------------
+core::led::Subscriber led_subscriber("led_sub", core::os::Thread::PriorityEnum::LOWEST);
+
+// --- DEVICE CONFIGURATION ---------------------------------------------------
+
+// --- MAIN -------------------------------------------------------------------
 extern "C" {
-   int
-   main()
-   {
-      module.initialize();
+    int
+    main()
+    {
+        module.initialize();
 
-      module.add(led_subscriber);
+        // Device configurations
 
-      // Led subscriber node
-      core::led::SubscriberConfiguration led_subscriber_configuration;
-      led_subscriber_configuration.topic = "led";
-      led_subscriber.setConfiguration(led_subscriber_configuration);
+        // Default configuration
+        led_subscriber_configuration_default.topic = "led";
 
-      // Setup and run
-      module.setup();
-      module.run();
+        // Add configurable objects to the configuration manager...
+        module.configurations().add(led_subscriber, led_subscriber_configuration_default);
 
-      // Is everything going well?
-      for (;;) {
-         if (!module.isOk()) {
-            module.halt("This must not happen!");
-         }
+        // ... and load the configuration
+        module.configurations().loadFrom(module.configurationStorage());
 
-         module.keepAlive();
+        // Add nodes to the node manager...
+        module.nodes().add(led_subscriber);
 
-         core::os::Thread::sleep(core::os::Time::ms(500));
-      }
+        // ... and let's play!
+        module.nodes().setup();
+        module.nodes().run();
 
-      return core::os::Thread::OK;
-   } // main
+        // Is everything going well?
+        for (;;) {
+            if (!module.nodes().areOk()) {
+                module.halt("This must not happen!");
+            }
+
+            core::os::Thread::sleep(core::os::Time::ms(500));
+
+            // Remember to feed the (watch)dog!
+            module.keepAlive();
+        }
+
+        return core::os::Thread::OK;
+    } // main
 }
