@@ -32,6 +32,9 @@ public:
     static core::hw::Pad& a6;
     static core::hw::Pad& a7;
     static core::hw::Pad& a8;
+
+    static void setPower14(bool on);
+    static void setPower58(bool on);
 // ----------------------------------------------------------------------------
 
     static bool

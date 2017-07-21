@@ -39,6 +39,9 @@ static core::hw::Pad_<core::hw::GPIO_A, 1> _a6;
 static core::hw::Pad_<core::hw::GPIO_A, 3> _a7;
 static core::hw::Pad_<core::hw::GPIO_A, 2> _a8;
 
+static core::hw::Pad_<core::hw::GPIO_A, 12> _pwr1_4;
+static core::hw::Pad_<core::hw::GPIO_C, 15> _pwr5_8;
+
 
 // MODULE DEVICES
 core::hw::Pad& Module::d1 = _d1;
@@ -92,11 +95,22 @@ Module::initialize()
         rtcantra.initialize(rtcan_config, canID());
         core::mw::Middleware::instance.start();
 
+        _pwr1_4.setMode(core::hw::Pad::Mode::OUTPUT_OPENDRAIN);
+        _pwr5_8.setMode(core::hw::Pad::Mode::OUTPUT_OPENDRAIN);
+
         initialized = true;
     }
 
     return initialized;
 } // Board::initialize
+
+void Module::setPower14(bool on) {
+	_pwr1_4.write(!on);
+}
+
+void Module::setPower58(bool on) {
+	_pwr5_8.write(!on);
+}
 
 // ----------------------------------------------------------------------------
 // CoreModule STM32FlashConfigurationStorage
