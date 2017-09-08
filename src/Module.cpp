@@ -102,12 +102,20 @@ Module::initialize()
     return initialized;
 } // Board::initialize
 
-void Module::setPower14(bool on) {
-	_pwr1_4.write(!on);
+void
+Module::setPower14(
+    bool on
+)
+{
+    _pwr1_4.write(!on);
 }
 
-void Module::setPower58(bool on) {
-	_pwr5_8.write(!on);
+void
+Module::setPower58(
+    bool on
+)
+{
+    _pwr5_8.write(!on);
 }
 
 // ----------------------------------------------------------------------------
