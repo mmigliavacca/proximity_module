@@ -67,12 +67,6 @@ core::hw::Pad& Module::a8 = _a8;
 static core::os::Thread::Stack<1024> management_thread_stack;
 static core::mw::RTCANTransport      rtcantra(&RTCAND1);
 
-core::mw::Middleware
-core::mw::Middleware::instance(
-    ModuleConfiguration::MODULE_NAME
-);
-
-
 RTCANConfig rtcan_config = {
     1000000, 100, 60
 };
@@ -91,9 +85,9 @@ Module::initialize()
     if (!initialized) {
         core::mw::CoreModule::initialize();
 
-        core::mw::Middleware::instance.initialize(name(), management_thread_stack, management_thread_stack.size(), core::os::Thread::LOWEST);
+        core::mw::Middleware::instance().initialize(name(), management_thread_stack, management_thread_stack.size(), core::os::Thread::LOWEST);
         rtcantra.initialize(rtcan_config, canID());
-        core::mw::Middleware::instance.start();
+        core::mw::Middleware::instance().start();
 
         _pwr1_4.setMode(core::hw::Pad::Mode::OUTPUT_OPENDRAIN);
         _pwr5_8.setMode(core::hw::Pad::Mode::OUTPUT_OPENDRAIN);
