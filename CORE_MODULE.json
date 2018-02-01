@@ -1,6 +1,6 @@
 {
   "name": "proximity",
-  "description": "Proximity module",
+  "description": "Nova Core Proximity module",
   "chip": "STM32F303CC",
   "required_packages": [
     "stm32_flash",

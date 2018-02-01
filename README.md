@@ -1,2 +1,2 @@
-# proximity_module
-Nova Core proximity module firmware
+# Nova Core Proximity module
+Proximity (US/IR) module
